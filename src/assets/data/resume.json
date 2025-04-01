@@ -1,0 +1,229 @@
+{
+  "name": "Ashis Chakraborty",
+  "title": "Frontend Developer | Angular Expert",
+  "summary": [
+    "Frontend Developer with 4+ years of experience in MEAN stack development specializing in building scalable, high-performance, and secure web applications.",
+    "Strong expertise in Agile methodology, collaborating with cross-functional teams to deliver efficient, user-centric solutions in fast-paced environments.",
+    "A proactive problem solver with a keen eye for UI/UX optimization, performance tuning, and deployment automation to enhance product efficiency.",
+    "Experienced in streamlining development workflows, improving system reliability, and ensuring seamless CI/CD pipelines for continuous delivery.",
+    "Passionate about bridging the gap between development and operations, ensuring efficient deployments, monitoring, and performance optimization."
+  ],
+  "skills": [
+    {
+      "name": "Angular",
+      "level": "Expert",
+      "category": "Frontend"
+    },
+    {
+      "name": "HTML",
+      "level": "Expert",
+      "category": "Frontend"
+    },
+    {
+      "name": "CSS",
+      "level": "Expert",
+      "category": "Frontend"
+    },
+    {
+      "name": "Node.js",
+      "level": "Intermediate",
+      "category": "Backend"
+    },
+    {
+      "name": "Express.js",
+      "level": "Intermediate",
+      "category": "Backend"
+    },
+    {
+      "name": "MongoDB",
+      "level": "Intermediate",
+      "category": "Database"
+    },
+    {
+      "name": "PostgreSQL",
+      "level": "Intermediate",
+      "category": "Database"
+    },
+    {
+      "name": "Tailwind",
+      "level": "Intermediate",
+      "category": "UI Libraries"
+    },
+    {
+      "name": "Bootstrap",
+      "level": "Expert",
+      "category": "UI Libraries"
+    },
+    {
+      "name": "Angular Material",
+      "level": "Expert",
+      "category": "UI Libraries"
+    },
+    {
+      "name": "RESTful APIs",
+      "level": "Expert",
+      "category": "APIs & Data Handling"
+    },
+    {
+      "name": "GraphQL",
+      "level": "Intermediate",
+      "category": "APIs & Data Handling"
+    },
+    {
+      "name": "Real-time Data Handling",
+      "level": "Intermediate",
+      "category": "APIs & Data Handling"
+    },
+    {
+      "name": "Git",
+      "level": "Expert",
+      "category": "Version Control"
+    },
+    {
+      "name": "Jira",
+      "level": "Intermediate",
+      "category": "Project Management"
+    },
+    {
+      "name": "MS Office Suite",
+      "level": "Intermediate",
+      "category": "Tools"
+    },
+    {
+      "name": "Highcharts.js",
+      "level": "Expert",
+      "category": "Charts & Visualization"
+    },
+    {
+      "name": "Chart.js",
+      "level": "Expert",
+      "category": "Charts & Visualization"
+    },
+    {
+      "name": "PrimeNG Chart",
+      "level": "Intermediate",
+      "category": "Charts & Visualization"
+    },
+    {
+      "name": "ng2 Chart",
+      "level": "Expert",
+      "category": "Charts & Visualization"
+    },
+    {
+      "name": "Grafana",
+      "level": "Intermediate",
+      "category": "Charts & Visualization"
+    }
+  ],
+  "experiences": [
+    {
+      "company": "Birlasoft",
+      "role": "Software Developer",
+      "duration": "Dec 2020 - Present",
+      "description": [
+        "Developed responsive web applications, ensuring cross-platform compatibility.",
+        "Engineered real-time dashboards with RESTful APIs, improving data accessibility.",
+        "Improved data accessibility through custom dashboards & real-time reporting features.",
+        "Optimized application performance, reducing load time by up to 40%.",
+        "Implemented CI/CD pipelines, automating deployment & testing workflows.",
+        "Collaborated with teams to design scalable solutions, enhancing user engagement.",
+        "Conducted comprehensive testing & validation to ensure system robustness."
+      ],
+      "technologies": ["Angular", "HTML5", "SCSS", "RESTful APIs", "Git", "CI/CD Pipelines", "Azure Cloud"]
+    },
+    {
+      "company": "Highradius",
+      "role": "Product Engineer",
+      "duration": "July 2019 - Mar 2020",
+      "description": [
+        "Worked on AI-enabled B2B cloud applications and data analysis.",
+        "Developed frontend components using React.js and GraphQL.",
+        "Implemented data visualization features for financial analytics.",
+        "Collaborated with cross-functional teams to deliver product features."
+      ],
+      "technologies": ["React.js", "HTML5", "SCSS", "NoSQL", "GraphQL"]
+    }
+  ],
+  "projects": [
+    {
+      "title": "Foresite Edge Device Management",
+      "company": "Birlasoft - Weatherford International Project",
+      "duration": "Aug 2023 - Present",
+      "description": "A web-based platform to manage IoT devices efficiently.",
+      "role": "Software Developer",
+      "technologies": ["Angular", "HTML5", "SCSS", "Custom Dashboards", "Git", "CI/CD Pipelines", "RESTful APIs"],
+      "details": [
+        "Developed a responsive web application for managing IoT devices in the oil and gas industry.",
+        "Implemented real-time monitoring dashboards to track device performance and status.",
+        "Created user-friendly interfaces for device configuration and management.",
+        "Integrated with backend APIs to fetch and update device data.",
+        "Implemented authentication and authorization features for secure access.",
+        "Optimized application performance for handling large datasets.",
+        "Collaborated with cross-functional teams to deliver a scalable solution."
+      ]
+    },
+    {
+      "title": "Manufacturing CognitiveLens Board",
+      "company": "Birlasoft - Internal Project",
+      "duration": "Apr 2022 - Jul 2023",
+      "description": "Custom dashboards and data visualization for manufacturing insights.",
+      "role": "Software Developer",
+      "technologies": ["Angular", "Node.js", "HTML5", "SCSS", "ng2 Charts", "Azure Cloud", "Grafana", "Git", "RESTful APIs"],
+      "details": [
+        "Designed and developed a comprehensive dashboard for manufacturing analytics.",
+        "Implemented data visualization components using ng2 Charts and Grafana.",
+        "Created interactive filters and drill-down capabilities for data exploration.",
+        "Integrated with Azure Cloud services for data processing and storage.",
+        "Developed RESTful APIs for data retrieval and manipulation.",
+        "Implemented real-time data updates using WebSockets.",
+        "Optimized dashboard performance for handling large datasets."
+      ]
+    },
+    {
+      "title": "Digital Manufacturing Insights",
+      "company": "Birlasoft - Cummins Project",
+      "duration": "Mar 2021 - Apr 2022",
+      "description": "Real-time dashboards for manufacturing insights using Highcharts and Azure Cloud.",
+      "role": "Software Developer",
+      "technologies": ["Angular", "HTML5", "SCSS", "Highcharts", "Azure Cloud", "Git", "RESTful APIs"],
+      "details": [
+        "Developed a digital manufacturing insights platform for real-time monitoring.",
+        "Implemented interactive charts and graphs using Highcharts.",
+        "Created responsive layouts for various device sizes.",
+        "Integrated with Azure Cloud services for data processing.",
+        "Implemented caching mechanisms to improve performance.",
+        "Developed custom components for specific visualization needs.",
+        "Collaborated with UX designers to create intuitive user interfaces."
+      ]
+    },
+    {
+      "title": "AI-Enabled Fintech B2B Cloud Application",
+      "company": "Highradius - Internal Product",
+      "duration": "Jul 2019 - Mar 2020",
+      "description": "Developed a cloud-based application for financial data analysis.",
+      "role": "Data Analyst",
+      "technologies": ["React.js", "HTML5", "SCSS", "NoSQL", "GraphQL"],
+      "details": [
+        "Developed frontend components for a financial data analysis application.",
+        "Implemented data visualization features using React.js.",
+        "Created interactive forms for data input and processing.",
+        "Integrated with GraphQL APIs for efficient data retrieval.",
+        "Implemented responsive design for various device sizes.",
+        "Collaborated with data scientists to implement AI-based features.",
+        "Participated in user testing and feedback incorporation."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "B.Tech in Electronics and Computer Science",
+      "institution": "KIIT Bhubaneswar",
+      "duration": "2016-2020"
+    }
+  ],
+  "contact": {
+    "phone": "+91 8777673738",
+    "email": "achakraborty169@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/ashis-chakraborty-68718b188"
+  }
+}
