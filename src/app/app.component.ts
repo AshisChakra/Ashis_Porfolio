@@ -6,7 +6,7 @@ import { SkillsSectionComponent } from './components/skills-section/skills-secti
 import { ExperienceSectionComponent } from './components/experience-section/experience-section.component';
 import { ProjectsSectionComponent } from './components/projects-section/projects-section.component';
 import { ContactSectionComponent } from './components/contact-section/contact-section.component';
-import { SearchComponent } from './components/search/search.component';
+// Search component removed as requested
 
 @Component({
   selector: 'app-root',
@@ -17,8 +17,7 @@ import { SearchComponent } from './components/search/search.component';
     SkillsSectionComponent,
     ExperienceSectionComponent,
     ProjectsSectionComponent,
-    ContactSectionComponent,
-    SearchComponent
+    ContactSectionComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -34,6 +33,7 @@ export class AppComponent implements AfterViewInit {
   private lastScrollPosition: number = 0;
   private currentSection: string = 'hero';
   private isBrowser: boolean;
+  private _lastMouseMoveTime: number = 0;
   
   constructor(
     private renderer: Renderer2,
@@ -82,21 +82,38 @@ export class AppComponent implements AfterViewInit {
     if (!this.isBrowser || !this.particleCanvas) return;
     
     const canvas = this.particleCanvas.nativeElement;
-    const particleCount = Math.floor(canvas.width * canvas.height / 10000);
+    // Reduce particle count for better performance
+    const particleCount = Math.floor(canvas.width * canvas.height / 15000);
     
     this.particles = [];
     for (let i = 0; i < particleCount; i++) {
+      // Create particles with varying sizes to simulate stars at different distances
+      const size = Math.random() < 0.1 ? 
+        Math.random() * 3 + 2 : // Larger stars (10% of particles)
+        Math.random() * 1.5 + 0.5; // Smaller stars (90% of particles)
+      
+      // Slower movement for a more realistic starfield
+      const speed = Math.random() * 0.3 + 0.05;
+      
       this.particles.push(new Particle(
         Math.random() * canvas.width,
         Math.random() * canvas.height,
-        Math.random() * 2 + 1,
-        this.getRandomColor()
+        speed,
+        this.getRandomColor(),
+        size
       ));
     }
   }
   
   private getRandomColor(): string {
-    const colors = ['rgba(138, 43, 226, 0.7)', 'rgba(106, 30, 176, 0.7)', 'rgba(75, 0, 130, 0.7)'];
+    // Create a starfield effect with different star colors
+    const colors = [
+      'rgba(255, 255, 255, 0.8)',  // Bright white stars
+      'rgba(173, 216, 230, 0.7)',  // Light blue stars
+      'rgba(255, 223, 186, 0.7)',  // Warm yellow stars
+      'rgba(138, 43, 226, 0.7)',   // Purple stars
+      'rgba(106, 30, 176, 0.5)'    // Dim purple stars
+    ];
     return colors[Math.floor(Math.random() * colors.length)];
   }
   
@@ -128,18 +145,26 @@ export class AppComponent implements AfterViewInit {
   private connectParticles() {
     if (!this.isBrowser || !this.ctx) return;
     
-    const maxDistance = 150;
+    const maxDistance = 120;
+    const maxDistanceSquared = maxDistance * maxDistance;
     
+    // Optimize by using squared distance and limiting connections
     for (let i = 0; i < this.particles.length; i++) {
-      for (let j = i + 1; j < this.particles.length; j++) {
+      // Only check a limited number of neighbors to improve performance
+      const checkLimit = Math.min(15, this.particles.length - i - 1);
+      
+      for (let j = i + 1; j <= i + checkLimit; j++) {
+        if (j >= this.particles.length) break;
+        
         const dx = this.particles[i].x - this.particles[j].x;
         const dy = this.particles[i].y - this.particles[j].y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        const distanceSquared = dx * dx + dy * dy;
         
-        if (distance < maxDistance) {
+        if (distanceSquared < maxDistanceSquared) {
+          const distance = Math.sqrt(distanceSquared);
           const opacity = 1 - (distance / maxDistance);
-          this.ctx.strokeStyle = `rgba(138, 43, 226, ${opacity * 0.5})`;
-          this.ctx.lineWidth = 1;
+          this.ctx.strokeStyle = `rgba(138, 43, 226, ${opacity * 0.4})`;
+          this.ctx.lineWidth = 0.5;
           this.ctx.beginPath();
           this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
           this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
@@ -184,13 +209,12 @@ export class AppComponent implements AfterViewInit {
   }
   
   private handleParallaxScroll() {
-    if (!this.isBrowser || !this.parallaxBg) return;
+    if (!this.isBrowser) return;
     
     const scrollY = window.scrollY;
-    const parallaxBg = this.parallaxBg.nativeElement;
     
-    // Apply an ultra-subtle parallax effect to background
-    this.renderer.setStyle(parallaxBg, 'transform', `translateY(${scrollY * 0.05}px)`);
+    // Remove the translateY effect on the background to keep it fixed
+    // while scrolling
     
     // Determine scroll direction
     const scrollDirection = scrollY > this.lastScrollPosition ? 'down' : 'up';
@@ -231,15 +255,41 @@ export class AppComponent implements AfterViewInit {
   onScroll(event: Event) {
     if (!this.isBrowser) return;
     
-    // Update particle movement based on scroll position
-    const scrollY = window.scrollY;
-    const scrollDirection = scrollY > this.lastScrollPosition ? 1 : -1;
+    // Update last scroll position for other methods
+    this.lastScrollPosition = window.scrollY;
     
-    this.particles.forEach(particle => {
-      particle.vy += scrollDirection * 0.01;
-    });
+    // No particle movement updates based on scroll
+    // This keeps the animation independent of scrolling
+  }
+  
+  // Interactive background effect on mouse movement
+  @HostListener('mousemove', ['$event'])
+  onMouseMove(event: MouseEvent) {
+    if (!this.isBrowser || !this.parallaxBg) return;
     
-    this.lastScrollPosition = scrollY;
+    const x = event.clientX / window.innerWidth;
+    const y = event.clientY / window.innerHeight;
+    
+    // Throttle particle updates for better performance
+    if (!this._lastMouseMoveTime || Date.now() - this._lastMouseMoveTime > 50) {
+      this._lastMouseMoveTime = Date.now();
+      
+      // Create subtle movement effect on particles (only update a subset for performance)
+      const updateCount = Math.min(20, this.particles.length);
+      for (let i = 0; i < updateCount; i++) {
+        const idx = Math.floor(Math.random() * this.particles.length);
+        // Apply very subtle force toward mouse position
+        this.particles[idx].vx += (x - 0.5) * 0.01;
+        this.particles[idx].vy += (y - 0.5) * 0.01;
+      }
+    }
+    
+    // Add subtle background position shift for mesh gradient effect
+    this.renderer.setStyle(
+      this.parallaxBg.nativeElement, 
+      'background-position', 
+      `${x * 5}% ${y * 5}%`
+    );
   }
   
   ngOnDestroy() {
@@ -253,17 +303,16 @@ export class AppComponent implements AfterViewInit {
 class Particle {
   vx: number;
   vy: number;
-  size: number;
   
   constructor(
     public x: number,
     public y: number,
     public speed: number,
-    public color: string
+    public color: string,
+    public size: number = Math.random() * 3 + 1
   ) {
     this.vx = (Math.random() - 0.5) * speed;
     this.vy = (Math.random() - 0.5) * speed;
-    this.size = Math.random() * 3 + 1;
   }
   
   update() {

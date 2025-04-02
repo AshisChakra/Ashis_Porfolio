@@ -21,18 +21,41 @@
     pointer-events: none;
 }
 
-/* Parallax Background */
+/* Enhanced Animated Mesh Gradient Background */
 .parallax-bg {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 200%;
-    background: linear-gradient(135deg, #121218 0%, #1a1a24 50%, #121218 100%);
+    height: 100%;
+    background: 
+        radial-gradient(at 40% 20%, hsla(280, 70%, 15%, 1) 0px, transparent 50%),
+        radial-gradient(at 80% 0%, hsla(260, 70%, 15%, 1) 0px, transparent 50%),
+        radial-gradient(at 0% 50%, hsla(240, 70%, 15%, 1) 0px, transparent 50%),
+        radial-gradient(at 80% 50%, hsla(270, 70%, 15%, 1) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, hsla(290, 70%, 15%, 1) 0px, transparent 50%),
+        radial-gradient(at 80% 100%, hsla(250, 70%, 15%, 1) 0px, transparent 50%),
+        radial-gradient(at 0% 0%, hsla(260, 70%, 15%, 1) 0px, transparent 50%);
+    background-size: 200% 200%;
+    animation: meshGradient 20s ease-in-out infinite;
     z-index: -1;
     transform-style: preserve-3d;
-    will-change: transform;
+    will-change: transform, background-position;
     opacity: 0.95;
+}
+
+/* Add a subtle pulsing overlay */
+.parallax-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.4) 100%);
+    opacity: 0.5;
+    animation: pulseOverlay 8s ease-in-out infinite alternate;
+    pointer-events: none;
 }
 
 /* Content Container */
@@ -716,6 +739,63 @@
     50% {
         transform: translateY(-10px);
     }
+}
+
+/* Copyright Footer */
+.copyright-footer {
+    text-align: center;
+    padding: 20px 0;
+    background: rgba(10, 10, 20, 0.9);
+    color: #ffffff;
+    font-size: 14px;
+    margin-top: 50px;
+    border-top: 1px solid rgba(138, 43, 226, 0.3);
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.copyright-footer p {
+    margin: 0;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(138, 43, 226, 0.8);
+    animation: pulseCopyright 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulseCopyright {
+    0% {
+        opacity: 0.8;
+        text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+    }
+    100% {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(138, 43, 226, 0.8), 0 0 15px rgba(138, 43, 226, 0.5);
+    }
+}
+
+@keyframes gradientWave {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes rotateBackground {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes meshGradient {
+    0% { background-position: 0% 0%; }
+    25% { background-position: 50% 0%; }
+    50% { background-position: 100% 50%; }
+    75% { background-position: 50% 100%; }
+    100% { background-position: 0% 0%; }
+}
+
+@keyframes pulseOverlay {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.5; }
+    100% { opacity: 0.7; }
 }
 
 @keyframes fadeInBackground {

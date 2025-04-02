@@ -38,13 +38,7 @@ import { CommonModule } from '@angular/common';
       margin-bottom: 10px;
       position: relative;
       z-index: 2;
-      background: rgba(10, 10, 20, 0.9);
-      padding: 15px 30px;
-      border-radius: 50px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(138, 43, 226, 0.3);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 2px solid rgba(138, 43, 226, 0.5);
+      padding: 15px 0;
     }
     
     .title-icon {
@@ -109,8 +103,8 @@ import { CommonModule } from '@angular/common';
     }
     
     .section-title:hover {
-      transform: translateZ(10px) scale(1.05);
-      text-shadow: 0 0 20px rgba(138, 43, 226, 1), 0 0 30px rgba(255, 255, 255, 0.6);
+      transform: translateZ(15px) scale(1.08);
+      text-shadow: 0 0 25px rgba(138, 43, 226, 1), 0 0 35px rgba(255, 255, 255, 0.7);
     }
     
     .title-text {
@@ -119,6 +113,17 @@ import { CommonModule } from '@angular/common';
       color: #ffffff;
       filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.9));
       text-shadow: 0 0 5px #8a2be2;
+      transition: all 0.3s ease;
+    }
+    
+    .section-title:hover .title-text {
+      background: linear-gradient(90deg, #ff00cc, #8a2be2, #3333ff, #8a2be2, #ff00cc);
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s linear infinite;
+      filter: none;
     }
     
     .title-text-fallback {
@@ -142,8 +147,10 @@ import { CommonModule } from '@angular/common';
     .decoration-line {
       height: 2px;
       width: 80px;
-      background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.8), transparent);
+      background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.8), rgba(255, 255, 255, 0.8), rgba(138, 43, 226, 0.8), transparent);
+      background-size: 200% 100%;
       border-radius: 2px;
+      animation: lineFlow 3s linear infinite;
     }
     
     .decoration-dot {
@@ -185,6 +192,16 @@ import { CommonModule } from '@angular/common';
       100% {
         background-position: 0% 50%;
       }
+    }
+    
+    @keyframes lineFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
     }
   `]
 })

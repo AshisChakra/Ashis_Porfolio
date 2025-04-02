@@ -113,13 +113,7 @@ import { ResumeService } from '../../services/resume.service';
           </div>
         </div>
         
-        <!-- Resume Download -->
-        <div class="resume-download">
-          <a href="assets/Ashis_Chakraborty_Resume.pdf" download class="download-btn">
-            <span class="download-icon">📄</span>
-            Download Resume (PDF)
-          </a>
-        </div>
+        <!-- Resume Download button removed as requested -->
         
         <!-- Loading State -->
         <div *ngIf="resumeService.loading()" class="loading-spinner">
@@ -357,33 +351,7 @@ import { ResumeService } from '../../services/resume.service';
       border-left: 4px solid red;
     }
     
-    .resume-download {
-      margin-top: 40px;
-      text-align: center;
-    }
-    
-    .download-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 15px 30px;
-      background: linear-gradient(45deg, #8a2be2, #6a1eb0);
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 18px;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    .download-btn:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-    }
-    
-    .download-icon {
-      font-size: 24px;
-    }
+    /* Resume Download button styles removed */
     
     .loading-spinner {
       display: flex;
