@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SectionHeaderComponent } from '../section-header/section-header.component';
 import { ResumeService } from '../../services/resume.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-contact-section',
@@ -47,6 +48,20 @@ import { ResumeService } from '../../services/resume.service';
           <!-- Contact Form -->
           <div class="contact-form-container">
             <h3>Send Me a Message</h3>
+            
+            <!-- Inline notification -->
+            <div class="notification" *ngIf="showNotification()" [@notificationAnimation]>
+              <div class="notification-icon" [class.success]="notificationType() === 'success'" [class.error]="notificationType() === 'error'">
+                <span *ngIf="notificationType() === 'success'">✓</span>
+                <span *ngIf="notificationType() === 'error'">!</span>
+              </div>
+              <div class="notification-content">
+                <h4>{{ notificationTitle() }}</h4>
+                <p>{{ notificationMessage() }}</p>
+              </div>
+              <button class="notification-close" (click)="closeNotification()">×</button>
+            </div>
+            
             <form class="contact-form" (submit)="submitForm($event)">
               <div class="form-group">
                 <label for="name">Name</label>
@@ -101,19 +116,8 @@ import { ResumeService } from '../../services/resume.service';
                 <span *ngIf="isSubmitting()">Sending...</span>
               </button>
             </form>
-            
-            <!-- Form Submission Feedback -->
-            <div class="form-feedback success" *ngIf="formStatus() === 'success'">
-              <p>Your message has been sent successfully! I'll get back to you soon.</p>
-            </div>
-            
-            <div class="form-feedback error" *ngIf="formStatus() === 'error'">
-              <p>There was an error sending your message. Please try again later.</p>
-            </div>
           </div>
         </div>
-        
-        <!-- Resume Download button removed as requested -->
         
         <!-- Loading State -->
         <div *ngIf="resumeService.loading()" class="loading-spinner">
@@ -244,6 +248,7 @@ import { ResumeService } from '../../services/resume.service';
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
       transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      position: relative;
     }
     
     .contact-form-container:hover {
@@ -334,24 +339,78 @@ import { ResumeService } from '../../services/resume.service';
       box-shadow: none;
     }
     
-    .form-feedback {
-      margin-top: 20px;
+    /* Inline Notification */
+    .notification {
+      margin-bottom: 20px;
+      background: rgba(34, 34, 34, 0.95);
+      border-radius: 10px;
       padding: 15px;
-      border-radius: 5px;
-      text-align: center;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      border-left: 4px solid #8a2be2;
     }
     
-    .form-feedback.success {
-      background: rgba(0, 128, 0, 0.1);
-      border-left: 4px solid green;
+    .notification-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
     }
     
-    .form-feedback.error {
-      background: rgba(255, 0, 0, 0.1);
-      border-left: 4px solid red;
+    .notification-icon.success {
+      background: rgba(0, 180, 0, 0.2);
+      color: #00b400;
+      border: 1px solid rgba(0, 180, 0, 0.5);
     }
     
-    /* Resume Download button styles removed */
+    .notification-icon.error {
+      background: rgba(255, 0, 0, 0.2);
+      color: #ff4757;
+      border: 1px solid rgba(255, 0, 0, 0.5);
+    }
+    
+    .notification-content {
+      flex: 1;
+    }
+    
+    .notification-content h4 {
+      margin: 0 0 5px;
+      color: white;
+      font-size: 16px;
+    }
+    
+    .notification-content p {
+      margin: 0;
+      color: #e0e0e0;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .notification-close {
+      background: none;
+      border: none;
+      color: #8a8a8a;
+      font-size: 20px;
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 0;
+      line-height: 1;
+      transition: all 0.3s ease;
+    }
+    
+    .notification-close:hover {
+      color: white;
+      transform: scale(1.1);
+    }
     
     .loading-spinner {
       display: flex;
@@ -388,7 +447,18 @@ import { ResumeService } from '../../services/resume.service';
         flex-direction: column;
       }
     }
-  `]
+  `],
+  animations: [
+    trigger('notificationAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-20px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0, transform: 'translateY(-20px)' }))
+      ])
+    ])
+  ]
 })
 export class ContactSectionComponent {
   protected resumeService = inject(ResumeService);
@@ -397,6 +467,10 @@ export class ContactSectionComponent {
   protected copiedItem = signal<string | null>(null);
   protected isSubmitting = signal<boolean>(false);
   protected formStatus = signal<'idle' | 'success' | 'error'>('idle');
+  protected showNotification = signal<boolean>(false);
+  protected notificationType = signal<'success' | 'error'>('success');
+  protected notificationTitle = signal<string>('');
+  protected notificationMessage = signal<string>('');
   
   // Form data
   protected contactForm = {
@@ -440,6 +514,21 @@ export class ContactSectionComponent {
     
     // Validate form
     if (!this.contactForm.name || !this.contactForm.email || !this.contactForm.subject || !this.contactForm.message) {
+      // Show notification for missing fields
+      this.notificationType.set('error');
+      this.notificationTitle.set('Form Incomplete');
+      this.notificationMessage.set('Please fill out all required fields in the contact form.');
+      this.showNotification.set(true);
+      return;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.contactForm.email)) {
+      this.notificationType.set('error');
+      this.notificationTitle.set('Invalid Email');
+      this.notificationMessage.set('Please enter a valid email address.');
+      this.showNotification.set(true);
       return;
     }
     
@@ -448,21 +537,47 @@ export class ContactSectionComponent {
     
     // Simulate form submission
     setTimeout(() => {
+      // Always succeed for now
+      const success = true;
+      
       this.isSubmitting.set(false);
-      this.formStatus.set('success');
       
-      // Reset form
-      this.contactForm = {
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-      };
+      if (success) {
+        this.notificationType.set('success');
+        this.notificationTitle.set('Message Sent');
+        this.notificationMessage.set('Your message has been sent successfully! I\'ll get back to you soon.');
+        this.showNotification.set(true);
+        
+        // Reset form
+        this.contactForm = {
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        };
+        
+        // Scroll to the notification
+        setTimeout(() => {
+          const notification = document.querySelector('.notification');
+          if (notification) {
+            notification.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+      } else {
+        this.notificationType.set('error');
+        this.notificationTitle.set('Message Not Sent');
+        this.notificationMessage.set('There was an error sending your message. Please try again later.');
+        this.showNotification.set(true);
+      }
       
-      // Reset form status after 5 seconds
+      // Auto-close notification after 5 seconds
       setTimeout(() => {
-        this.formStatus.set('idle');
+        this.closeNotification();
       }, 5000);
     }, 1500);
+  }
+  
+  protected closeNotification() {
+    this.showNotification.set(false);
   }
 }

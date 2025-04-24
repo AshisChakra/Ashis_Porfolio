@@ -1,11 +1,13 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, ElementRef, AfterViewInit, HostListener, ViewChild, Renderer2, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, HostListener, ViewChild, Renderer2, PLATFORM_ID, Inject, OnInit } from '@angular/core';
 
 import { ProfileSectionComponent } from './components/profile-section/profile-section.component';
 import { SkillsSectionComponent } from './components/skills-section/skills-section.component';
 import { ExperienceSectionComponent } from './components/experience-section/experience-section.component';
 import { ProjectsSectionComponent } from './components/projects-section/projects-section.component';
 import { ContactSectionComponent } from './components/contact-section/contact-section.component';
+import { LoadingAnimationComponent } from './components/loading-animation/loading-animation.component';
+import { LoadingService } from './services/loading.service';
 // Search component removed as requested
 
 @Component({
@@ -17,12 +19,13 @@ import { ContactSectionComponent } from './components/contact-section/contact-se
     SkillsSectionComponent,
     ExperienceSectionComponent,
     ProjectsSectionComponent,
-    ContactSectionComponent
+    ContactSectionComponent,
+    LoadingAnimationComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
   title = 'Ashis_Portfolio';
   @ViewChild('particleCanvas') particleCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('parallaxBg') parallaxBg!: ElementRef;
@@ -31,15 +34,47 @@ export class AppComponent implements AfterViewInit {
   private particles: Particle[] = [];
   private animationFrameId: number = 0;
   private lastScrollPosition: number = 0;
-  private currentSection: string = 'hero';
+  protected currentSection: string = 'hero';
   private isBrowser: boolean;
   private _lastMouseMoveTime: number = 0;
+  private appLoaded: boolean = false;
+  
+  // Add navigation related properties
+  protected hasScrolled: boolean = false;
+  protected isMobileMenuOpen: boolean = false;
+  
+  // Navigation items
+  protected navItems = [
+    { id: 'about', text: 'About', link: '#about' },
+    { id: 'skills', text: 'Skills', link: '#skills' },
+    { id: 'experience', text: 'Experience', link: '#experience' },
+    { id: 'projects', text: 'Projects', link: '#projects' },
+    { id: 'contact', text: 'Contact', link: '#contact' }
+  ];
   
   constructor(
     private renderer: Renderer2,
-    @Inject(PLATFORM_ID) platformId: Object
+    @Inject(PLATFORM_ID) platformId: Object,
+    public loadingService: LoadingService
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+  }
+  
+  ngOnInit() {
+    if (this.isBrowser) {
+      // Loading animation is shown automatically since LoadingService initializes with loading=true
+      
+      // Hide loading after 6 seconds (5 seconds display + 1 second for slide-out)
+      setTimeout(() => {
+        this.loadingService.hideLoading();
+        
+        // Add fade-in animation to content
+        const contentContainer = document.querySelector('.content-container');
+        if (contentContainer) {
+          this.renderer.addClass(contentContainer, 'fade-in');
+        }
+      }, 6000);
+    }
   }
   
   ngAfterViewInit() {
@@ -82,18 +117,18 @@ export class AppComponent implements AfterViewInit {
     if (!this.isBrowser || !this.particleCanvas) return;
     
     const canvas = this.particleCanvas.nativeElement;
-    // Reduce particle count for better performance
-    const particleCount = Math.floor(canvas.width * canvas.height / 15000);
+    // Reduce particle count significantly for better performance while keeping visual appeal
+    const particleCount = Math.floor(canvas.width * canvas.height / 25000);
     
     this.particles = [];
     for (let i = 0; i < particleCount; i++) {
       // Create particles with varying sizes to simulate stars at different distances
-      const size = Math.random() < 0.1 ? 
-        Math.random() * 3 + 2 : // Larger stars (10% of particles)
-        Math.random() * 1.5 + 0.5; // Smaller stars (90% of particles)
+      const size = Math.random() < 0.05 ? 
+        Math.random() * 2.5 + 1.5 : // Larger stars (5% of particles)
+        Math.random() * 1.2 + 0.3;  // Smaller stars (95% of particles)
       
-      // Slower movement for a more realistic starfield
-      const speed = Math.random() * 0.3 + 0.05;
+      // Even slower movement for better performance and more realistic starfield
+      const speed = Math.random() * 0.15 + 0.02;
       
       this.particles.push(new Particle(
         Math.random() * canvas.width,
@@ -145,29 +180,40 @@ export class AppComponent implements AfterViewInit {
   private connectParticles() {
     if (!this.isBrowser || !this.ctx) return;
     
-    const maxDistance = 120;
+    // Reduce connection distance for better performance
+    const maxDistance = 80;
     const maxDistanceSquared = maxDistance * maxDistance;
     
-    // Optimize by using squared distance and limiting connections
-    for (let i = 0; i < this.particles.length; i++) {
-      // Only check a limited number of neighbors to improve performance
-      const checkLimit = Math.min(15, this.particles.length - i - 1);
+    // Optimize by checking fewer particles and skipping frames
+    // Only connect particles every other frame to improve performance
+    if (Math.random() > 0.5) return;
+    
+    // Only check a subset of particles to improve performance
+    const checkFraction = 0.3; // Check only 30% of particles
+    const checkLimit = Math.floor(this.particles.length * checkFraction);
+    
+    for (let i = 0; i < checkLimit; i++) {
+      // Choose random indices to check
+      const idx = Math.floor(Math.random() * this.particles.length);
+      // Only check a small number of potential neighbors
+      const neighborLimit = 5;
       
-      for (let j = i + 1; j <= i + checkLimit; j++) {
-        if (j >= this.particles.length) break;
+      for (let j = 0; j < neighborLimit; j++) {
+        const neighborIdx = Math.floor(Math.random() * this.particles.length);
+        if (neighborIdx === idx) continue;
         
-        const dx = this.particles[i].x - this.particles[j].x;
-        const dy = this.particles[i].y - this.particles[j].y;
+        const dx = this.particles[idx].x - this.particles[neighborIdx].x;
+        const dy = this.particles[idx].y - this.particles[neighborIdx].y;
         const distanceSquared = dx * dx + dy * dy;
         
         if (distanceSquared < maxDistanceSquared) {
           const distance = Math.sqrt(distanceSquared);
           const opacity = 1 - (distance / maxDistance);
-          this.ctx.strokeStyle = `rgba(138, 43, 226, ${opacity * 0.4})`;
-          this.ctx.lineWidth = 0.5;
+          this.ctx.strokeStyle = `rgba(138, 43, 226, ${opacity * 0.3})`;
+          this.ctx.lineWidth = 0.3;
           this.ctx.beginPath();
-          this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-          this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+          this.ctx.moveTo(this.particles[idx].x, this.particles[idx].y);
+          this.ctx.lineTo(this.particles[neighborIdx].x, this.particles[neighborIdx].y);
           this.ctx.stroke();
         }
       }
@@ -258,6 +304,9 @@ export class AppComponent implements AfterViewInit {
     // Update last scroll position for other methods
     this.lastScrollPosition = window.scrollY;
     
+    // Update scroll state for navbar effects
+    this.hasScrolled = window.scrollY > 50;
+    
     // No particle movement updates based on scroll
     // This keeps the animation independent of scrolling
   }
@@ -292,6 +341,26 @@ export class AppComponent implements AfterViewInit {
     );
   }
   
+  // Toggle mobile menu
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    
+    // Prevent scrolling when menu is open
+    if (this.isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+  
+  // Close mobile menu when clicking a link
+  closeMenu(event: Event) {
+    if (this.isMobileMenuOpen) {
+      this.isMobileMenuOpen = false;
+      document.body.style.overflow = '';
+    }
+  }
+  
   ngOnDestroy() {
     if (this.isBrowser && this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
@@ -303,6 +372,8 @@ export class AppComponent implements AfterViewInit {
 class Particle {
   vx: number;
   vy: number;
+  originalAlpha: number;
+  alpha: number;
   
   constructor(
     public x: number,
@@ -311,19 +382,50 @@ class Particle {
     public color: string,
     public size: number = Math.random() * 3 + 1
   ) {
-    this.vx = (Math.random() - 0.5) * speed;
-    this.vy = (Math.random() - 0.5) * speed;
+    // Set random velocities based on direction
+    const angle = Math.random() * Math.PI * 2;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    
+    // Set transparency for twinkling effect
+    this.originalAlpha = 0.1 + Math.random() * 0.7;
+    this.alpha = this.originalAlpha;
   }
   
   update() {
+    // Update position based on velocity
     this.x += this.vx;
     this.y += this.vy;
+    
+    // Create subtle twinkling effect
+    if (Math.random() > 0.99) { // Only 1% chance to change per frame
+      this.alpha = Math.random() > 0.5 ? 
+        Math.min(this.originalAlpha * 1.5, 1) : // Brighter
+        this.originalAlpha * 0.5; // Dimmer
+    } else if (Math.random() > 0.9) { // 10% chance to revert to original
+      this.alpha = this.originalAlpha;
+    }
   }
   
   draw(ctx: CanvasRenderingContext2D) {
+    // Extract color components for custom alpha
+    const baseColor = this.color.replace(/[^,]+(?=\))/, this.alpha.toString());
+    
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = this.color;
+    ctx.fillStyle = baseColor;
+    
+    // Use different rendering for larger particles (stars)
+    if (this.size > 1.5) {
+      const gradient = ctx.createRadialGradient(
+        this.x, this.y, 0,
+        this.x, this.y, this.size
+      );
+      gradient.addColorStop(0, baseColor);
+      gradient.addColorStop(1, 'transparent');
+      ctx.fillStyle = gradient;
+    }
+    
     ctx.fill();
   }
 }

@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SectionHeaderComponent } from '../section-header/section-header.component';
 import { ResumeService } from '../../services/resume.service';
 import { Project } from '../../models/resume.model';
@@ -9,6 +10,22 @@ import { Project } from '../../models/resume.model';
   selector: 'app-projects-section',
   standalone: true,
   imports: [CommonModule, FormsModule, SectionHeaderComponent],
+  animations: [
+    trigger('expandCollapse', [
+      state('collapsed', style({
+        height: '0',
+        opacity: '0',
+        overflow: 'hidden'
+      })),
+      state('expanded', style({
+        height: '*',
+        opacity: '1'
+      })),
+      transition('collapsed <=> expanded', [
+        animate('300ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ])
+    ])
+  ],
   template: `
     <section id="projects" class="section">
       <app-section-header title="Projects"></app-section-header>
@@ -16,15 +33,35 @@ import { Project } from '../../models/resume.model';
       <div class="projects-container">
         <!-- Filter Controls -->
         <div class="filter-controls">
-          <div class="search-box">
-            <input 
-              type="text" 
-              [(ngModel)]="searchQuery" 
-              (input)="filterProjects()"
-              placeholder="Search projects or technologies..." 
-              class="search-input"
-            />
-            <span class="search-icon">🔍</span>
+          <div class="search-container">
+            <div class="search-box">
+              <span class="search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </span>
+              <input 
+                type="text" 
+                [(ngModel)]="searchQuery" 
+                (input)="filterProjects()"
+                placeholder="Search projects or technologies..." 
+                class="search-input"
+              />
+              <button 
+                *ngIf="searchQuery" 
+                class="clear-btn" 
+                (click)="resetFilters(); $event.stopPropagation()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="search-tag-count" *ngIf="filteredProjects().length !== allProjects().length">
+              <span>{{ filteredProjects().length }} results</span>
+              <button class="reset-btn" (click)="resetFilters()">Clear</button>
+            </div>
           </div>
         </div>
         
@@ -75,12 +112,54 @@ import { Project } from '../../models/resume.model';
             </div>
             
             <!-- Project Details (Expanded View) -->
-            <div class="project-details" [class.visible]="selectedProject() === i">
-              <div class="details-content">
-                <h4>Project Details</h4>
-                <ul class="details-list">
-                  <li *ngFor="let detail of project.details">{{ detail }}</li>
-                </ul>
+            <div 
+              class="project-details" 
+              [@expandCollapse]="selectedProject() === i ? 'expanded' : 'collapsed'"
+            >
+              <div class="expanded-layout">
+                <div class="left-column">
+                  <div class="project-overview">
+                    <h4>Project Overview</h4>
+                    <p>{{ project.description }}</p>
+                    <div class="project-meta">
+                      <div class="project-meta-item">
+                        <span class="meta-label">Company:</span> {{ project.company }}
+                      </div>
+                      <div class="project-meta-item">
+                        <span class="meta-label">Role:</span> {{ project.role }}
+                      </div>
+                      <div class="project-meta-item">
+                        <span class="meta-label">Duration:</span> {{ project.duration }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="right-column">
+                  <div class="details-content">
+                    <h4>Project Highlights</h4>
+                    <ul class="details-list">
+                      <li *ngFor="let detail of project.details">{{ detail }}</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="tech-stack">
+                    <h4>Technologies Used</h4>
+                    <div class="tech-tags expanded">
+                      <span 
+                        *ngFor="let tech of project.technologies" 
+                        class="tech-tag large"
+                        (click)="filterByTechnology(tech, $event)"
+                      >
+                        {{ tech }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="expanded-footer">
+                <button class="close-expanded" (click)="toggleProject(i); $event.stopPropagation()">Close Details</button>
               </div>
             </div>
           </div>
@@ -114,45 +193,138 @@ import { Project } from '../../models/resume.model';
     .filter-controls {
       margin-bottom: 30px;
       background: rgba(34, 34, 34, 0.8);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(138, 43, 226, 0.1);
+      border-left: 3px solid rgba(138, 43, 226, 0.5);
+      transition: all 0.3s ease;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .filter-controls:hover {
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(138, 43, 226, 0.2);
+      transform: translateY(-3px);
+    }
+    
+    .search-container {
+      position: relative;
     }
     
     .search-box {
       position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      border-radius: 10px;
+      background: rgba(50, 50, 60, 0.3);
+      transition: all 0.3s ease;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .search-box:focus-within {
+      background: rgba(60, 60, 70, 0.4);
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(138, 43, 226, 0.3);
+    }
+    
+    .search-icon {
+      padding: 0 15px;
+      color: #8a2be2;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    
+    .search-box:focus-within .search-icon {
+      color: #b870ff;
     }
     
     .search-input {
       width: 100%;
-      padding: 12px 40px 12px 15px;
+      padding: 15px 45px 15px 5px;
       border: none;
-      border-radius: 5px;
-      background: rgba(255, 255, 255, 0.1);
+      background: transparent;
       color: white;
       font-size: 16px;
       transition: all 0.3s ease;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+    }
+    
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+      transition: all 0.3s ease;
+      opacity: 0.7;
     }
     
     .search-input:focus {
       outline: none;
-      box-shadow: 0 0 0 2px #8a2be2;
-      background: rgba(255, 255, 255, 0.15);
     }
     
-    .search-icon {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
+    .search-input:focus::placeholder {
+      opacity: 0.4;
+      transform: translateX(5px);
+    }
+    
+    .clear-btn {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border-radius: 50%;
+    }
+    
+    .clear-btn:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .search-tag-count {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      padding: 0 5px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .reset-btn {
+      background: none;
+      border: none;
       color: #8a2be2;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .reset-btn:hover {
+      background: rgba(138, 43, 226, 0.1);
+      color: #b870ff;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 30px;
       perspective: 1000px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
     }
     
     .project-card {
@@ -166,6 +338,9 @@ import { Project } from '../../models/resume.model';
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
       cursor: pointer;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
     
     .project-card:hover {
@@ -208,12 +383,16 @@ import { Project } from '../../models/resume.model';
     
     .project-content {
       padding: 0 20px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     
     .project-description {
       color: #e0e0e0;
       line-height: 1.6;
       margin-bottom: 15px;
+      flex: 1;
     }
     
     .project-meta {
@@ -267,27 +446,53 @@ import { Project } from '../../models/resume.model';
     }
     
     .project-details {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-      opacity: 0;
-    }
-    
-    .project-details.visible {
-      max-height: 1000px;
       opacity: 1;
     }
     
+    .project-details.visible {
+      opacity: 1;
+    }
+    
+    .expanded-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      padding: 20px;
+    }
+    
+    .left-column, .right-column {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .project-overview {
+      text-align: left;
+    }
+    
+    .project-overview h4 {
+      font-size: 18px;
+      color: white;
+      margin: 0 0 15px;
+    }
+    
+    .project-meta {
+      margin-bottom: 15px;
+    }
+    
+    .project-meta-item {
+      margin-bottom: 8px;
+    }
+    
     .details-content {
-      padding: 0 20px 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      margin-top: 10px;
+      padding: 0;
+      margin-top: 0;
+      text-align: left;
     }
     
     .details-content h4 {
       font-size: 18px;
       color: white;
-      margin: 20px 0 15px;
+      margin: 0 0 15px;
     }
     
     .details-list {
@@ -300,6 +505,47 @@ import { Project } from '../../models/resume.model';
       margin-bottom: 10px;
       color: #e0e0e0;
       line-height: 1.6;
+    }
+    
+    .tech-stack {
+      margin-top: 20px;
+      text-align: left;
+    }
+    
+    .tech-stack h4 {
+      font-size: 18px;
+      color: white;
+      margin: 0 0 15px;
+    }
+    
+    .expanded-footer {
+      display: flex;
+      justify-content: center;
+      padding: 15px 0 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .close-expanded {
+      background: rgba(138, 43, 226, 0.2);
+      color: white;
+      border: 1px solid rgba(138, 43, 226, 0.5);
+      border-radius: 20px;
+      padding: 10px 25px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .close-expanded:hover {
+      background: rgba(138, 43, 226, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .close-expanded:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
     .no-results {
@@ -344,6 +590,14 @@ import { Project } from '../../models/resume.model';
       .projects-grid {
         grid-template-columns: 1fr;
       }
+      
+      .expanded-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .right-column {
+        margin-top: 20px;
+      }
     }
   `]
 })
@@ -351,7 +605,7 @@ export class ProjectsSectionComponent {
   protected resumeService = inject(ResumeService);
   
   // Reactive signals
-  private allProjects = signal<Project[]>([]);
+  protected allProjects = signal<Project[]>([]);
   protected filteredProjects = signal<Project[]>([]);
   protected selectedProject = signal<number | null>(null);
   

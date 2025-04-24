@@ -1,3 +1,6 @@
+<!-- Loading Animation -->
+<app-loading-animation *ngIf="loadingService.loading()"></app-loading-animation>
+
 <!-- Particle Animation Canvas -->
 <canvas #particleCanvas class="particle-canvas"></canvas>
 
@@ -5,17 +8,35 @@
 <div #parallaxBg class="parallax-bg"></div>
 
 <!-- Main Content Container -->
-<div class="content-container">
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <h2 class="logo">Ashis<span class="highlight"> Chakraborty</span></h2>
-        <ul class="nav-links">
-            <li><a href="#about" data-scroll>About</a></li>
-            <li><a href="#skills" data-scroll>Skills</a></li>
-            <li><a href="#experience" data-scroll>Experience</a></li>
-            <li><a href="#projects" data-scroll>Projects</a></li>
-            <li><a href="#contact" data-scroll>Contact</a></li>
-        </ul>
+<div class="content-container" [class.loading]="loadingService.loading()">
+    <!-- Enhanced Navigation Bar -->
+    <nav class="navbar" [class.scrolled]="hasScrolled" [class.mobile-open]="isMobileMenuOpen">
+        <div class="navbar-container">
+            <div class="logo-container">
+                <h2 class="logo">Ashis<span class="highlight"> Chakraborty</span></h2>
+                <button class="mobile-toggle" (click)="toggleMobileMenu()" aria-label="Toggle navigation menu">
+                    <span [class.animate]="isMobileMenuOpen"></span>
+                    <span [class.animate]="isMobileMenuOpen"></span>
+                    <span [class.animate]="isMobileMenuOpen"></span>
+                </button>
+            </div>
+            
+            <div class="nav-wrapper" [class.active]="isMobileMenuOpen">
+                <ul class="nav-links">
+                    <li *ngFor="let item of navItems; let i = index">
+                        <a 
+                            href="{{item.link}}" 
+                            [class.active]="currentSection === item.id"
+                            (click)="closeMenu($event)"
+                            [style.animation-delay.s]="isMobileMenuOpen ? 0.1 * i : 0"
+                        >
+                            {{item.text}}
+                            <span class="nav-indicator"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
 
     <!-- Hero Section -->

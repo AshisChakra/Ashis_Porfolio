@@ -2,6 +2,7 @@ export interface Skill {
   name: string;
   level: string; // Expert, Intermediate, Beginner
   category: string; // Frontend, Backend, Database, etc.
+  logoPath?: string; // Path to the skill logo
 }
 
 export interface Experience {
