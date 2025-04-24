@@ -217,7 +217,8 @@ export class SkillsSectionComponent {
     'Node.js', 
     'MongoDB', 
     'Tailwind', 
-    'Git'
+    'Git',
+    'Docker'
   ];
   
   ngOnInit() {

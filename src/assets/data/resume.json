@@ -80,6 +80,11 @@
       "category": "Version Control"
     },
     {
+      "name": "Docker",
+      "level": "Intermediate",
+      "category": "DevOps"
+    },
+    {
       "name": "Jira",
       "level": "Intermediate",
       "category": "Project Management"
