@@ -1,5 +1,5 @@
 {
-  "name": "ashis-portflio",
+  "name": "ashis-portfolio",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:Ashis_Portflio": "node dist/ashis-portflio/server/server.mjs"
+    "serve:ssr:Ashis_Portflio": "node dist/ashis-portfolio/server/server.mjs"
   },
   "private": true,
   "dependencies": {

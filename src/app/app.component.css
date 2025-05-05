@@ -10,20 +10,9 @@
     min-height: 100vh;
 }
 
-/* Particle Canvas */
-.particle-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.85;
-    filter: blur(0.5px);
-}
+/* Remove Particle Canvas */
 
-/* Enhanced Animated Mesh Gradient Background */
+/* Static Background */
 .parallax-bg {
     position: fixed;
     top: 0;
@@ -38,16 +27,12 @@
         radial-gradient(at 0% 100%, hsla(290, 60%, 24%, 1) 0px, transparent 50%),
         radial-gradient(at 80% 100%, hsla(250, 60%, 24%, 1) 0px, transparent 50%),
         radial-gradient(at 0% 0%, hsla(260, 60%, 22%, 1) 0px, transparent 50%);
-    background-color: #131340; /* Much lighter deep blue background */
-    background-size: 300% 300%;
-    animation: meshGradient 35s ease-in-out infinite alternate;
+    background-color: #131340; /* Deep blue background */
     z-index: -1;
-    transform-style: preserve-3d;
-    will-change: transform, background-position;
     opacity: 0.97;
 }
 
-/* Add a subtle pulsing overlay with nebular wisps */
+/* Static overlay with nebular wisps for texture */
 .parallax-bg::after {
     content: '';
     position: absolute;
@@ -59,12 +44,11 @@
         radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.3) 100%),
         url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.4 0"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
     opacity: 0.12;
-    animation: pulseOverlay 20s ease-in-out infinite alternate;
     pointer-events: none;
     mix-blend-mode: overlay;
 }
 
-/* Add floating particles effect with enhanced cosmic dust */
+/* Static cosmic dust overlay */
 .parallax-bg::before {
     content: '';
     position: absolute;
@@ -82,17 +66,10 @@
         100px 100px,
         180px 180px,
         120px 120px;
-    background-position: 
-        0 0, 
-        0 0, 
-        0 0, 
-        0 0, 
-        0 0;
-    animation: floatingParticles 50s linear infinite;
     opacity: 0.9;
 }
 
-/* Enhanced greeting highlights with subtle animation */
+/* Enhanced greeting highlights */
 .greeting .highlight {
     background: linear-gradient(90deg, #8a2be2, #6a1eb0);
     background-clip: text;
@@ -101,99 +78,82 @@
     text-shadow: 0 0 30px rgba(138, 43, 226, 0.8);
     position: relative;
     display: inline-block;
-    animation: nameGlow 5s infinite alternate;
 }
 
-@keyframes nameGlow {
-    0% {
-        text-shadow: 0 0 20px rgba(138, 43, 226, 0.6);
-    }
-    50% {
-        text-shadow: 0 0 30px rgba(138, 43, 226, 0.9), 0 0 50px rgba(138, 43, 226, 0.4);
-    }
-    100% {
-        text-shadow: 0 0 25px rgba(138, 43, 226, 0.7);
-    }
-}
-
-/* Enhanced tagline container with subtle float */
+/* Enhanced tagline container */
 .tagline-container {
     margin-top: 5px;
+    margin-bottom: 25px;
     position: relative;
     background: rgba(138, 43, 226, 0.08);
-    padding: 20px;
+    padding: 15px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(138, 43, 226, 0.1);
     border-left: 3px solid rgba(138, 43, 226, 0.5);
     backdrop-filter: blur(5px);
     transition: all 0.5s cubic-bezier(0.17, 0.67, 0.68, 1.04);
-    line-height: 1.8;
-    animation: floatContainer 6s ease-in-out infinite;
-}
-
-@keyframes floatContainer {
-    0% {
-        transform: translateY(0);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(138, 43, 226, 0.1);
-    }
-    50% {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25), inset 0 0 20px rgba(138, 43, 226, 0.15);
-    }
-    100% {
-        transform: translateY(0);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(138, 43, 226, 0.1);
-    }
+    line-height: 1.6;
 }
 
 .tagline-container:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(138, 43, 226, 0.15);
-    animation-play-state: paused;
 }
 
-/* Enhanced typing containers with subtle glow */
+/* Enhanced typing containers with fixed widths */
 .typing-container {
     display: inline-block;
     color: #d580ff;
     font-weight: 600;
     position: relative;
-    margin: 0 2px;
+    margin: 0 5px;
     text-shadow: 0 0 8px rgba(213, 128, 255, 0.3);
-    min-width: 160px; /* Set minimum width based on content */
+    min-height: 1.2em;
     text-align: left;
     white-space: nowrap;
-    border-radius: 4px;
     padding: 0 4px;
-    background-color: rgba(138, 43, 226, 0.05);
-    box-shadow: 0 0 2px rgba(138, 43, 226, 0.2);
-    transition: all 0.3s ease;
-    animation: typingGlow 4s infinite alternate;
+    border-bottom: 1px solid rgba(213, 128, 255, 0.3);
+    overflow: hidden;
+    vertical-align: bottom;
 }
 
-@keyframes typingGlow {
-    0% {
-        box-shadow: 0 0 2px rgba(138, 43, 226, 0.2);
-        background-color: rgba(138, 43, 226, 0.05);
-        text-shadow: 0 0 8px rgba(213, 128, 255, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 8px rgba(138, 43, 226, 0.4);
-        background-color: rgba(138, 43, 226, 0.08);
-        text-shadow: 0 0 15px rgba(213, 128, 255, 0.5);
-    }
-    100% {
-        box-shadow: 0 0 4px rgba(138, 43, 226, 0.3);
-        background-color: rgba(138, 43, 226, 0.06);
-        text-shadow: 0 0 10px rgba(213, 128, 255, 0.4);
-    }
+/* Set specific widths for each typing container based on content */
+.typing-container[data-text="Angular Developer"] {
+    min-width: 180px;
+    width: 180px;
 }
 
-.typing-container:hover {
-    background-color: rgba(138, 43, 226, 0.1);
-    box-shadow: 0 0 8px rgba(138, 43, 226, 0.3);
-    transform: translateY(-2px);
-    transition: all 0.2s ease;
+.typing-container[data-text="Web Solutions"] {
+    min-width: 150px; 
+    width: 150px;
+}
+
+.typing-container[data-text="Generative AI Tools"] {
+    min-width: 190px;
+    width: 190px;
+}
+
+.typing-container[data-text="Prompt Engineering"] {
+    min-width: 200px;
+    width: 200px;
+}
+
+.typing-container[data-text="No-Code Automation"] {
+    min-width: 210px;
+    width: 210px;
+}
+
+.typing-container::after {
+    content: '|';
+    position: absolute;
+    right: 0;
+    top: 0;
+    animation: cursor-blink 1.5s step-end infinite; /* Slower blinking */
+}
+
+@keyframes cursor-blink {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 /* Content Container */
@@ -201,7 +161,7 @@
     position: relative;
     z-index: 1;
     perspective: 1000px;
-    padding-top: 80px; /* Add padding to account for fixed navbar */
+    padding-top: 70px; /* Reduced from 80px to 70px */
     opacity: 1;
     transition: opacity 1s ease, filter 1s ease;
 }
@@ -218,13 +178,13 @@
 }
 
 @keyframes contentFadeIn {
-    0% {
+    from {
         opacity: 0;
-        filter: blur(5px);
+        transform: translateY(20px);
     }
-    100% {
+    to {
         opacity: 1;
-        filter: blur(0);
+        transform: translateY(0);
     }
 }
 
@@ -561,15 +521,15 @@
     to { opacity: 1; }
 }
 
-/* Hero Section */
+/* Hero Section - Adjusted positioning */
 .hero {
-    min-height: 100vh;
+    min-height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding: 30px 20px 50px;
+    padding: 20px 20px 80px;
     margin-top: -20px;
     background: transparent;
     z-index: 1;
@@ -582,6 +542,7 @@
     max-width: 1400px;
     width: 100%;
     z-index: 2;
+    margin-top: -40px;
 }
 
 .hero-content {
@@ -592,14 +553,14 @@
     position: relative;
 }
 
-/* Greeting Styles */
+/* Greeting Styles - Adjusted spacing */
 .greeting-container {
     position: relative;
-    margin-bottom: -5px;
+    margin-bottom: 5px;
 }
 
 .greeting {
-    font-size: 4.5rem;
+    font-size: 4.2rem;
     font-weight: 800;
     margin-bottom: 5px;
     line-height: 1.1;
@@ -608,29 +569,6 @@
     -webkit-background-clip: text;
     color: transparent;
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-}
-
-.greeting .highlight {
-    background: linear-gradient(90deg, #8a2be2, #6a1eb0);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 30px rgba(138, 43, 226, 0.8);
-    position: relative;
-    display: inline-block;
-    animation: nameGlow 5s infinite alternate;
-}
-
-@keyframes nameGlow {
-    0% {
-        text-shadow: 0 0 20px rgba(138, 43, 226, 0.6);
-    }
-    50% {
-        text-shadow: 0 0 30px rgba(138, 43, 226, 0.9), 0 0 50px rgba(138, 43, 226, 0.4);
-    }
-    100% {
-        text-shadow: 0 0 25px rgba(138, 43, 226, 0.7);
-    }
 }
 
 .greeting .highlight::after {
@@ -648,71 +586,44 @@
 }
 
 .title-text {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.9);
     margin-top: 0;
+    margin-bottom: 15px;
     padding-left: 5px;
     letter-spacing: 1px;
 }
 
 /* Tagline Styles */
-.tagline-container {
-    margin-top: 5px;
-    position: relative;
-    background: rgba(138, 43, 226, 0.08);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(138, 43, 226, 0.1);
-    border-left: 3px solid rgba(138, 43, 226, 0.5);
-    backdrop-filter: blur(5px);
-    transition: all 0.5s cubic-bezier(0.17, 0.67, 0.68, 1.04);
-    line-height: 1.8;
-    animation: floatContainer 6s ease-in-out infinite;
-}
-
-@keyframes floatContainer {
-    0% {
-        transform: translateY(0);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(138, 43, 226, 0.1);
-    }
-    50% {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25), inset 0 0 20px rgba(138, 43, 226, 0.15);
-    }
-    100% {
-        transform: translateY(0);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(138, 43, 226, 0.1);
-    }
-}
-
-.tagline-container:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(138, 43, 226, 0.15);
-    animation-play-state: paused;
-}
-
 .tagline {
-    font-size: 1.1rem;
-    line-height: 1.8;
+    font-size: 1rem;
+    line-height: 1.6;
     color: rgba(255, 255, 255, 0.9);
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .tagline-header {
     font-weight: 600;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     color: rgba(255, 255, 255, 0.95);
-    display: block;
-    line-height: 1.5;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    line-height: 1.6;
+    margin-bottom: 5px;
 }
 
 .tagline-detail {
-    display: block;
-    line-height: 1.7;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    line-height: 1.8;
 }
 
 .typing-text {
@@ -731,11 +642,18 @@
     animation: cursorBlink 1s infinite;
 }
 
-/* Download Button */
+/* CTA Container - Adjusted for multiple buttons */
 .cta-container {
-    margin-top: 20px;
+    margin-top: 15px;
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
 }
 
+/* Button Styling */
 .download-btn {
     display: inline-flex;
     align-items: center;
@@ -753,64 +671,51 @@
     box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3), 0 0 0 3px rgba(138, 43, 226, 0.1);
     position: relative;
     overflow: hidden;
-    animation: buttonPulse 4s infinite alternate;
 }
 
-.download-btn::before {
-    content: '';
+/* Tooltip refinements */
+.consultancy-btn {
+    position: relative;
+}
+
+.consultancy-btn::after {
+    content: attr(title);
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transform: skewX(-20deg);
-    transition: all 0.5s ease;
-}
-
-.download-btn:hover {
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 15px 30px rgba(138, 43, 226, 0.4), 0 0 0 5px rgba(138, 43, 226, 0.15);
-    background: linear-gradient(135deg, #9f45ff, #7b2acd);
-    animation-play-state: paused;
-}
-
-.download-btn:hover::before {
-    left: 100%;
-    transition: 0.8s;
-}
-
-@keyframes buttonPulse {
-    0% {
-        box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3), 0 0 0 3px rgba(138, 43, 226, 0.1);
-        background: linear-gradient(135deg, #8a2be2, #6a1eb0);
-    }
-    50% {
-        box-shadow: 0 15px 25px rgba(138, 43, 226, 0.4), 0 0 0 4px rgba(138, 43, 226, 0.15);
-        background: linear-gradient(135deg, #9f45ff, #7b2acd);
-    }
-    100% {
-        box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3), 0 0 0 3px rgba(138, 43, 226, 0.1);
-        background: linear-gradient(135deg, #8a2be2, #6a1eb0);
-    }
-}
-
-.btn-text {
-    position: relative;
-    z-index: 1;
-}
-
-.btn-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    bottom: -45px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.85);
+    background: rgba(20, 20, 30, 0.95);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
     transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 10;
 }
 
-.download-btn:hover .btn-icon {
-    transform: translateY(3px);
+.consultancy-btn:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    bottom: -40px;
+}
+
+/* Responsive adjustments for buttons */
+@media (max-width: 480px) {
+    .cta-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .download-btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* Visual Tech Nodes */
@@ -834,16 +739,6 @@
     background: rgba(138, 43, 226, 0.2);
     border-radius: 50%;
     box-shadow: 0 0 30px rgba(138, 43, 226, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.5);
-    animation: pulseNode 3s infinite cubic-bezier(0.4, 0, 0.2, 1), nodeOrbit 20s infinite linear;
-}
-
-@keyframes nodeOrbit {
-    0% {
-        transform: rotate(0deg) translateX(0px) rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg) translateX(10px) rotate(-360deg);
-    }
 }
 
 .node::before {
@@ -862,7 +757,6 @@
 .node1 {
     top: 20%;
     left: 50%;
-    animation-delay: 0s;
     width: 20px;
     height: 20px;
 }
@@ -870,13 +764,11 @@
 .node2 {
     top: 35%;
     left: 20%;
-    animation-delay: 0.5s;
 }
 
 .node3 {
     top: 70%;
     left: 30%;
-    animation-delay: 1s;
     width: 18px;
     height: 18px;
 }
@@ -884,13 +776,11 @@
 .node4 {
     top: 60%;
     left: 75%;
-    animation-delay: 1.5s;
 }
 
 .node5 {
     top: 30%;
     left: 80%;
-    animation-delay: 2s;
     width: 22px;
     height: 22px;
 }
@@ -900,7 +790,6 @@
     background: linear-gradient(90deg, rgba(138, 43, 226, 0.1), rgba(138, 43, 226, 0.3));
     height: 1px;
     transform-origin: left;
-    animation: connectPulse 4s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .c1 {
@@ -908,7 +797,6 @@
     left: calc(50% + 10px);
     width: 30%;
     transform: rotate(30deg);
-    animation-delay: 0.2s;
 }
 
 .c2 {
@@ -916,7 +804,6 @@
     left: calc(20% + 7px);
     width: 25%;
     transform: rotate(40deg);
-    animation-delay: 0.7s;
 }
 
 .c3 {
@@ -924,7 +811,6 @@
     left: calc(30% + 9px);
     width: 40%;
     transform: rotate(-30deg);
-    animation-delay: 1.2s;
 }
 
 .c4 {
@@ -932,7 +818,6 @@
     left: calc(75% + 7px);
     width: 25%;
     transform: rotate(210deg);
-    animation-delay: 1.7s;
 }
 
 /* Reveal Animation */
@@ -1017,7 +902,7 @@
 
 @media (max-width: 768px) {
     .hero {
-        padding: 120px 20px 50px;
+        padding: 100px 20px 50px;
     }
     
     .greeting {
@@ -1479,99 +1364,6 @@
     margin: 0;
     letter-spacing: 1px;
     text-shadow: 0 0 5px rgba(138, 43, 226, 0.8);
-    animation: pulseCopyright 3s ease-in-out infinite alternate;
-}
-
-@keyframes pulseCopyright {
-    0% {
-        opacity: 0.8;
-        text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
-    }
-    100% {
-        opacity: 1;
-        text-shadow: 0 0 10px rgba(138, 43, 226, 0.8), 0 0 15px rgba(138, 43, 226, 0.5);
-    }
-}
-
-@keyframes gradientWave {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-@keyframes rotateBackground {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes meshGradient {
-    0% {
-        background-position: 0% 0%;
-        transform: scale(1.05);
-    }
-    25% {
-        background-position: 30% 25%;
-    }
-    50% {
-        background-position: 70% 50%;
-        transform: scale(1);
-    }
-    75% {
-        background-position: 50% 75%;
-    }
-    100% {
-        background-position: 10% 85%;
-        transform: scale(1.02);
-    }
-}
-
-@keyframes pulseOverlay {
-    0% {
-        opacity: 0.10;
-        background: radial-gradient(circle at 30% 40%, transparent 35%, rgba(0, 0, 0, 0.5) 100%);
-        transform: scale(1.02);
-    }
-    50% {
-        opacity: 0.18;
-        background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(0, 0, 0, 0.5) 100%);
-        transform: scale(1);
-    }
-    100% {
-        opacity: 0.15;
-        background: radial-gradient(circle at 70% 60%, transparent 35%, rgba(0, 0, 0, 0.5) 100%);
-        transform: scale(1.04);
-    }
-}
-
-@keyframes fadeInBackground {
-    from {
-        background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
-    }
-    to {
-        background: linear-gradient(to bottom, #1a1a1a, #0d0d0d);
-    }
-}
-
-/* New animation for floating particles - more cosmic feel */
-@keyframes floatingParticles {
-    0% {
-        background-position: 
-            0 0, 
-            0 0, 
-            0 0, 
-            0 0, 
-            0 0;
-        transform: rotate(0deg);
-    }
-    100% {
-        background-position: 
-            150px 150px, 
-            -200px 200px, 
-            -100px 100px, 
-            180px -180px, 
-            -120px 120px;
-        transform: rotate(1deg);
-    }
 }
 
 /* Responsive Design */
@@ -1621,13 +1413,13 @@
     }
     
     .content-container {
-        padding-top: 120px; /* Increase padding for mobile to account for taller navbar */
+        padding-top: 100px; /* Reduced from 120px to 100px for mobile */
     }
     
     .hero {
-        height: calc(100vh - 120px);
-        padding-top: 120px;
-        margin-top: -120px;
+        height: calc(100vh - 100px);
+        padding-top: 100px; /* Reduced from 120px to 100px */
+        margin-top: -100px; /* Adjusted to match padding-top */
     }
 }
 
@@ -1655,7 +1447,7 @@
     transform-origin: left;
 }
 
-/* AI Animated Text */
+/* AI Text */
 .ai-animated-text {
     position: relative;
     display: inline-block;
@@ -1679,143 +1471,96 @@
     transition: transform 0.5s ease;
 }
 
-.ai-animated-text .char {
-    display: inline-block;
-    animation: textFlicker 5s infinite alternate;
-    animation-delay: calc(var(--char-index) * 0.1s);
-}
-
 .ai-animated-text:hover {
     color: #f0b3ff !important;
     text-shadow: 0 0 12px rgba(213, 128, 255, 0.7);
 }
 
-.ai-animated-text.active-pulse {
-    animation: pulse 2s ease;
-}
-
-@keyframes textFlicker {
-    0%, 100% {
-        opacity: 1;
-        text-shadow: 0 0 8px rgba(213, 128, 255, 0.3);
-    }
-    25% {
-        opacity: 0.9;
-        text-shadow: 0 0 5px rgba(213, 128, 255, 0.2);
-    }
-    75% {
-        opacity: 0.95;
-        text-shadow: 0 0 10px rgba(213, 128, 255, 0.4);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        text-shadow: 0 0 5px rgba(213, 128, 255, 0.3);
-    }
-    50% {
-        text-shadow: 0 0 15px rgba(213, 128, 255, 0.8), 0 0 25px rgba(213, 128, 255, 0.5);
-    }
-    100% {
-        text-shadow: 0 0 5px rgba(213, 128, 255, 0.3);
-    }
-}
-
-@keyframes ai-pulse {
-    0% {
-        background-position: -100% 0;
-    }
-    100% {
-        background-position: 200% 0;
-    }
-}
-
-/* Enhanced typing containers */
-.typing-container {
-    display: inline-block;
-    color: #d580ff;
-    font-weight: 600;
-    position: relative;
-    margin: 0 2px;
-    text-shadow: 0 0 8px rgba(213, 128, 255, 0.3);
-    min-width: 160px; /* Set minimum width based on content */
-    text-align: left;
-    white-space: nowrap;
-    border-radius: 4px;
-    padding: 0 4px;
-    background-color: rgba(138, 43, 226, 0.05);
-    box-shadow: 0 0 2px rgba(138, 43, 226, 0.2);
+/* Scroll Down Arrow Animation - Repositioned but style preserved */
+.scroll-down-arrow {
+    position: absolute; 
+    bottom: 120px; /* Positioned higher up */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px; /* Reverted to original size */
+    height: 44px;
+    background-color: rgba(138, 43, 226, 0.15); /* Reverted to original style */
+    border-radius: 50%;
+    border: 2px solid rgba(138, 43, 226, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 100;
     transition: all 0.3s ease;
-    animation: typingGlow 4s infinite alternate;
+    animation: jumpingArrow 2s infinite ease-in-out;
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.3); /* Reverted to original glow */
+    overflow: hidden;
 }
 
-@keyframes typingGlow {
-    0% {
-        box-shadow: 0 0 2px rgba(138, 43, 226, 0.2);
-        background-color: rgba(138, 43, 226, 0.05);
-        text-shadow: 0 0 8px rgba(213, 128, 255, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 8px rgba(138, 43, 226, 0.4);
-        background-color: rgba(138, 43, 226, 0.08);
-        text-shadow: 0 0 15px rgba(213, 128, 255, 0.5);
-    }
-    100% {
-        box-shadow: 0 0 4px rgba(138, 43, 226, 0.3);
-        background-color: rgba(138, 43, 226, 0.06);
-        text-shadow: 0 0 10px rgba(213, 128, 255, 0.4);
-    }
-}
-
-.typing-container:hover {
-    background-color: rgba(138, 43, 226, 0.1);
-    box-shadow: 0 0 8px rgba(138, 43, 226, 0.3);
-    transform: translateY(-2px);
-    transition: all 0.2s ease;
-}
-
-/* Adjust min-width for specific containers based on content */
-.typing-container[data-text="Angular Developer"] {
-    min-width: 170px;
-}
-
-.typing-container[data-text="Web Solutions"] {
-    min-width: 140px;
-}
-
-.typing-container[data-text="Prompt Engineering"] {
-    min-width: 190px;
-}
-
-.typing-container[data-text="No-Code Automation"] {
-    min-width: 200px;
-}
-
-.typing-container[data-text="Generative AI Tools"] {
-    min-width: 175px;
-}
-
-.typing-container::after {
+.scroll-down-arrow::before {
     content: '';
     position: absolute;
-    right: -2px;
-    top: 6px;
-    height: 60%;
-    width: 2px;
-    background-color: #d580ff;
-    animation: cursor-blink 0.8s infinite;
-    box-shadow: 0 0 5px rgba(213, 128, 255, 0.5);
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); /* Reverted to original */
+    transition: all 0.6s ease;
 }
 
-@keyframes cursor-blink {
+.scroll-down-arrow svg {
+    width: 24px; /* Reverted to original size */
+    height: 24px;
+    fill: none;
+    stroke: #d580ff; /* Reverted to original color */
+    stroke-width: 2; /* Reverted to original thickness */
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: all 0.3s ease;
+    transform: translateY(0);
+}
+
+/* Media queries for scroll arrow position only */
+@media (max-width: 768px) {
+    .scroll-down-arrow {
+        bottom: 100px;
+    }
+}
+
+@media (max-height: 700px) {
+    .scroll-down-arrow {
+        bottom: 70px;
+    }
+}
+
+.scroll-down-arrow:hover {
+    transform: translateX(-50%) scale(1.1);
+    border-color: rgba(138, 43, 226, 0.9);
+    background-color: rgba(138, 43, 226, 0.2);
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+    animation-play-state: paused;
+}
+
+.scroll-down-arrow:hover::before {
+    left: 100%;
+}
+
+.scroll-down-arrow:hover svg {
+    stroke: #ffffff;
+    transform: translateY(2px);
+}
+
+.scroll-down-arrow:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.5);
+}
+
+@keyframes jumpingArrow {
     0%, 100% {
-        opacity: 1;
-        height: 60%;
-        box-shadow: 0 0 8px rgba(213, 128, 255, 0.6);
+        transform: translateX(-50%) translateY(0);
     }
     50% {
-        opacity: 0.5;
-        height: 40%;
-        box-shadow: 0 0 3px rgba(213, 128, 255, 0.3);
+        transform: translateX(-50%) translateY(-10px);
     }
 }
