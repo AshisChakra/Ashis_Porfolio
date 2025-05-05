@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/ashis-portfolio",
+    "public": "dist/ashis-portfolio/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

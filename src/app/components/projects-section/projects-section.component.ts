@@ -663,6 +663,13 @@ export class ProjectsSectionComponent {
   protected toggleProject(index: number) {
     if (this.selectedProject() === index) {
       this.selectedProject.set(null);
+      // Scroll to the top of the projects section when closing project details
+      setTimeout(() => {
+        const projectsSection = document.getElementById('projects');
+        if (projectsSection) {
+          projectsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 300); // Delay to allow animation to complete
     } else {
       this.selectedProject.set(index);
     }

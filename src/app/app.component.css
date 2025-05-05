@@ -673,9 +673,45 @@
     overflow: hidden;
 }
 
+.download-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s ease;
+}
+
+.download-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(138, 43, 226, 0.4), 0 0 0 4px rgba(138, 43, 226, 0.2);
+    background: linear-gradient(135deg, #9a3af2, #7a2ec0);
+}
+
+.download-btn:hover::before {
+    left: 100%;
+}
+
+.download-btn:hover .btn-icon {
+    transform: translateX(3px) scale(1.1);
+}
+
+.btn-icon {
+    transition: transform 0.3s ease;
+}
+
 /* Tooltip refinements */
 .consultancy-btn {
     position: relative;
+    background: linear-gradient(135deg, #8a2be2, #6a1eb0);
+    box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3), 0 0 0 3px rgba(138, 43, 226, 0.1);
+}
+
+.consultancy-btn:hover {
+    background: linear-gradient(135deg, #9a3af2, #7a2ec0);
+    box-shadow: 0 15px 25px rgba(138, 43, 226, 0.4), 0 0 0 4px rgba(138, 43, 226, 0.2);
 }
 
 .consultancy-btn::after {
@@ -1476,15 +1512,15 @@
     text-shadow: 0 0 12px rgba(213, 128, 255, 0.7);
 }
 
-/* Scroll Down Arrow Animation - Repositioned but style preserved */
+/* Scroll Down Arrow Animation */
 .scroll-down-arrow {
     position: absolute; 
-    bottom: 120px; /* Positioned higher up */
+    bottom: 120px;
     left: 50%;
     transform: translateX(-50%);
-    width: 44px; /* Reverted to original size */
+    width: 44px;
     height: 44px;
-    background-color: rgba(138, 43, 226, 0.15); /* Reverted to original style */
+    background-color: rgba(138, 43, 226, 0.15);
     border-radius: 50%;
     border: 2px solid rgba(138, 43, 226, 0.7);
     display: flex;
@@ -1494,7 +1530,7 @@
     z-index: 100;
     transition: all 0.3s ease;
     animation: jumpingArrow 2s infinite ease-in-out;
-    box-shadow: 0 0 15px rgba(138, 43, 226, 0.3); /* Reverted to original glow */
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
     overflow: hidden;
 }
 
@@ -1505,32 +1541,40 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); /* Reverted to original */
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: all 0.6s ease;
 }
 
 .scroll-down-arrow svg {
-    width: 24px; /* Reverted to original size */
+    width: 24px;
     height: 24px;
     fill: none;
-    stroke: #d580ff; /* Reverted to original color */
-    stroke-width: 2; /* Reverted to original thickness */
+    stroke: #d580ff;
+    stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
     transition: all 0.3s ease;
     transform: translateY(0);
 }
 
-/* Media queries for scroll arrow position only */
+/* Media queries for scroll arrow position */
 @media (max-width: 768px) {
     .scroll-down-arrow {
-        bottom: 100px;
+        display: none; /* Hide scroll down arrow on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .scroll-down-arrow {
+        bottom: 8px;
+        width: 38px;
+        height: 38px;
     }
 }
 
 @media (max-height: 700px) {
     .scroll-down-arrow {
-        bottom: 70px;
+        bottom: 5px;
     }
 }
 
